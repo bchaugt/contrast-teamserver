@@ -1,6 +1,9 @@
 ---
 driver:
-  name: vagrant
+  name: azurerm
+  subscription_id: '4352f0e7-67db-4001-8352-25147175ee02'
+  location: 'West US'
+  machine_size: 'Standard_DS3_v2'
 
 provisioner:
   name: chef_zero
@@ -12,46 +15,53 @@ provisioner:
 verifier:
   name: inspec
 
+transport:
+  ssh_key: ~/.ssh/id_kitchen_azurerm
+
 platforms:
-  - name: ubuntu-16.04
+  # - name: windows2008-r2
+  #   driver_config:
+  #     image_urn: MicrosoftWindowsServer:WindowsServer:2008-R2-SP1:latest
+  #     username: azure
+  #     password: Cod3Can!
+  #     winrm_powershell_script: |-
+  #       winrm quickconfig -q
+  #       winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="512"}'
+  #       winrm set winrm/config '@{MaxTimeoutms="1800000"}'
+  #       winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+  #       winrm set winrm/config/service/auth '@{Basic="true"}'
+  #   transport:
+  #     name: winrm
+  #     elevated: true
+  # - name: windows2012-r2
+  #   driver_config:
+  #     image_urn: MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:latest
+  #     username: azure
+  #     password: Cod3Can!
+  #   transport:
+  #     name: winrm
+  #     elevated: true
+  # - name: windows2016
+  #   driver_config:
+  #     image_urn: MicrosoftWindowsServer:WindowsServer:2016-Datacenter:latest
+  #     username: bchau
+  #     password: ContrastRocks123!
+  #   transport:
+  #     name: winrm
+  #     elevated: true
+  - name: centos-7.5
     driver:
-      customize:
-        memory: 8192
-        cpus: 2
-      network:
-        - ["forwarded_port", {guest: 8888, host: 8888}]
-        - ["private_network", {ip: "192.168.33.100"}]
-  # - name: centos-7
-  #   driver:
-  #     customize:
-  #       memory: 8192
-  #       cpus: 2
-  #     network:
-  #       - ["forwarded_port", {guest: 8888, host: 8888}]
-  #       - ["private_network", {ip: "192.168.33.101"}]
-  # - name: debian-9
-  #   driver:
-  #     box: bento/debian-9
-  #     customize:
-  #       memory: 8192
-  #       cpus: 2
-  #     network:
-  #       - ["forwarded_port", {guest: 8888, host: 8888}]
-  #       - ["private_network", {ip: "192.168.33.102"}]
-  # - name: rhel7
-  #   driver:
-  #     box: generic/rhel7
-  #     customize:
-  #       memory: 8192
-  #       cpus: 2
-  #     network:
-  #       - ["forwarded_port", {guest: 8888, host: 8888}]
-  #       - ["private_network", {ip: "192.168.33.103"}]
+      image_urn: OpenLogic:CentOS:7.5:latest
+      vm_name: centos-75-vm
+      vm_tags:
+        ostype: linux
+        distro: centos
+
 
 suites:
   - name: default
     run_list:
-      - recipe[contrast-teamserver::default]
+      - recipe[contrast-teamserver-windows::default]
     verifier:
       inspec_tests:
         - test/integration/default

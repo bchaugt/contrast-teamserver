@@ -22,10 +22,10 @@ directory '/opt/contrast-installer' do
 end
 
 # Transfer Contrast TeamServer installer to local directory
-cookbook_file "/opt/contrast-installer/#{ node['contrast-teamserver']['installer'] }" do
-  source node['contrast-teamserver']['installer']
-  mode '0755'
-end
+# cookbook_file "/opt/contrast-installer/#{ node['contrast-teamserver']['installer'] }" do
+#   source node['contrast-teamserver']['installer']
+#   mode '0755'
+# end
 
 # Transfer demo license to local directory
 cookbook_file "/opt/#{ node['contrast-teamserver']['license'] }" do
